@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Async HTTP Request</title>
+</head>
+<body>
+  <div id="root">
+    <form id="myForm" action="#">
+      <fieldset>
+        <legend>Async HTTP Request</legend>
+        <label Set number mebers:></label><br>
+        <input type="number" min="0"max="99" placeholder="0 - 99">
+        <input type="submit" value="Send Request">
+        <button onClick="(e) => {console.log('e>', e)}">try</button>
+      </fieldset>
+    </form>
+    <div id="cont"></div>
+  </div>
+
+  <script type="text/javascript">
+    document.getElementById("myForm").onSubmit = (e) => {console.log('e', e)};
+    const getFakeMembers = count => new Promise((resolves, rejects) => {
+      const api = `https://api.randomuser.me/?nat=US&results=${count}`
+      const request = new XMLHttpRequest()
+      request.open('GET', api)
+      request.onload = () =>
+        (request.status === 200) 
+          ? resolves(JSON.parse(request.response).results) 
+          : reject(Error(request.statusText))
+      request.onerror = (err) => rejects(err)
+      request.send()
+    })
+    getFakeMembers(5).then(
+      members => console.log('members :>> ', members),
+      err => console.log(new Error("cannot load members from randomuser.me"))
+    );
+  </script>
+</body>
+</html>
